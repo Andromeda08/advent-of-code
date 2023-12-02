@@ -22,11 +22,7 @@ fun day2Part2(input: List<String>): Int {
     return input.sumOf { line ->
         val max = mutableMapOf("red" to 0, "green" to 0, "blue" to 0)
         processGame(line)
-            .forEach { set ->
-                set.forEach { pull ->
-                    max.compute(pull.first) { _, v -> if (pull.second > v!!) pull.second else v }
-                }
-            }
+            .forEach { it.forEach { pull -> max.compute(pull.first) { _, v -> if (pull.second > v!!) pull.second else v } } }
             .let { max.values.reduce(Int::times) }
     }
 }
@@ -36,8 +32,8 @@ fun main()
     val input = Input("input_day_2.txt").readLines()
 
     val part1 = day2Part1(input)
-    println("Part 1 : $part1")
+    println("Part 1 : $part1 (2505)")
 
     val part2 = day2Part2(input)
-    println("Part 2 : $part2")
+    println("Part 2 : $part2 (70265)")
 }
