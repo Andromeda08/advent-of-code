@@ -38,8 +38,7 @@ fun day1Part2(input: List<String>): Int {
     return sum
 }
 
-fun main()
-{
+fun main() {
     val input = Input("input_day_1.txt").readLines()
 
     val part1 = day1Part1(input)

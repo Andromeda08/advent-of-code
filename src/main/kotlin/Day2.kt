@@ -4,7 +4,7 @@ fun processGame(game: String): List<List<Pair<String, Int>>> {
         .map { set ->
             set.dropWhile { it == ' ' }
                 .split(", ")
-                .map { it.substringAfter(' ') to it.substringBefore(' ').toInt()}
+                .map { it.substringAfter(' ') to it.substringBefore(' ').toInt() }
         }
 }
 
@@ -27,13 +27,12 @@ fun day2Part2(input: List<String>): Int {
     }
 }
 
-fun main()
-{
+fun main() {
     val input = Input("input_day_2.txt").readLines()
 
     val part1 = day2Part1(input)
-    println("Part 1 : $part1 (2505)")
+    println("Part 1 : $part1")
 
     val part2 = day2Part2(input)
-    println("Part 2 : $part2 (70265)")
+    println("Part 2 : $part2")
 }
