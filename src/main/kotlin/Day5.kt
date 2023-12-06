@@ -1,9 +1,6 @@
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-
-class Mapping(dstStart: Long, srcStart: Long, val range: Long) {
-    val srcRange = LongRange(srcStart, (srcStart + range - 1).coerceAtLeast(0))
-    val dstRange = LongRange(dstStart, (dstStart + range - 1).coerceAtLeast(0))
+class Mapping(dstStart: Long, srcStart: Long, private val range: Long) {
+    private val srcRange = LongRange(srcStart, (srcStart + range - 1).coerceAtLeast(0))
+    private val dstRange = LongRange(dstStart, (dstStart + range - 1).coerceAtLeast(0))
 
     fun srcInMapping(src: Long): Boolean {
         return srcRange.contains(src)
@@ -60,12 +57,33 @@ fun day5Part1(db: Database, input: List<String>): Long {
     return findMin(seeds, db)
 }
 
-fun day5Part2(db: Database, input: List<String>): Long {
-    return 0
+fun walkMaps(id: Long, idx: Int, maps: List<List<Mapping>>): Long {
+    if (idx == maps.count()) {
+        return id
+    }
+    return walkMaps(getSrcToDst(maps[idx], id), idx + 1, maps)
+}
+
+fun day5part1Recursive(db: Database, input: List<String>): Long {
+    val seeds = input.first().drop(7).split(" ").map { it.toLong() }
+    val maps = listOf(db.seedToSoil, db.soilToFert, db.fertToWater, db.waterToLight, db.lightToTemp, db.tempToHum, db.humToLoc)
+    return seeds.map { walkMaps(it, 0, maps) }.toList().min()
+}
+
+fun day5part2Recursive(db: Database, input: List<String>): Long {
+    val seeds = input.first().drop(7).split(" ").map { it.toLong() }
+        .windowed(2, 2)
+        .map { LongRange(it[0], it[0] + it[1] - 1) }
+        .flatten()
+        .sorted()
+
+    val maps = listOf(db.seedToSoil, db.soilToFert, db.fertToWater, db.waterToLight, db.lightToTemp, db.tempToHum, db.humToLoc)
+
+    return seeds.map { walkMaps(it, 0, maps) }.toList().min()
 }
 
 fun main() {
-    val input = Input("input_day_5.txt").readLines()
+    val input = Input("input_day_5_test.txt").readLines()
     val db = Database(
         getInputSection("seed-to-soil", input),
         getInputSection("soil-to-fertilizer", input),
@@ -75,6 +93,7 @@ fun main() {
         getInputSection("temperature-to-humidity", input),
         getInputSection("humidity-to-location", input)
     )
-    println("Part 1 : ${day5Part1(db, input)}")
-    println("Part 2 : ${day5Part2(db, input)}")
+
+    println("Part 1 : ${day5part1Recursive(db, input)}")
+    println("Part 2 : ${day5part2Recursive(db, input)}")
 }
