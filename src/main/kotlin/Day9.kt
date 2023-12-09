@@ -51,7 +51,8 @@ fun day9part2(input: List<List<Int>>): Int {
 }
 
 fun main() {
-    val input = Input("input_day_9.txt").readLines().map {it.split(" ").map{n -> n.toInt()}}
+    val input = Input("input_day_9.txt").readLines()
+        .map { it.split(" ").map{n -> n.toInt()} }
 
     println("Part 1 : ${day9part1(input)}")
     println("Part 2 : ${day9part2(input)}")
